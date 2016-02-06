@@ -1,7 +1,10 @@
 package com.example.pavan.sunshine;
 
+import android.annotation.TargetApi;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,9 +14,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,15 +30,19 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
-import java.util.logging.Logger;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment {
+
+    ArrayAdapter<String> myadpt;
+
+
 
     public MainActivityFragment() {
     }
@@ -74,6 +82,7 @@ public class MainActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
         container = (ViewGroup) inflater.inflate(R.layout.fragment_main, container, false);
 
         ArrayList<String> myarray = new ArrayList<>();
@@ -85,25 +94,41 @@ public class MainActivityFragment extends Fragment {
         myarray.add("fri-Sunny-88/63");
         myarray.add("sat-Sunny-88/63");
 
-
-
-        ArrayAdapter<String> myadpt = new ArrayAdapter<>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview, myarray);
+        myadpt = new ArrayAdapter<>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview, myarray);
         ListView lv = (ListView) container.findViewById(R.id.listview_forcast);
         lv.setAdapter(myadpt);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getContext(),myadpt.getItem(position),Toast.LENGTH_SHORT).show();
+                Intent iu = new Intent(view.getContext(),DetailActivity.class);
+                iu.putExtra("data",myadpt.getItem(position));
+                startActivity(iu);
+            }
+        });
 
         return container;
     }
 
 
 
-    public class FetchTask extends AsyncTask<String, Void,Void> {
+    public class FetchTask extends AsyncTask<String, Void, String[]> {
 
         // These two need to be declared outside the try/catch
 // so that they can be closed in the finally block.
+
         String[] str = new String[7];
+        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+        @Override
+        protected void onPostExecute(String[] strings) {
+            if (strings != null) {
+                myadpt.clear();
+                myadpt.addAll(strings);
+            }
+        }
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected String[] doInBackground(String... params) {
             Uri.Builder builder = new Uri.Builder();
             String postcode = params[0]+ ",india";
             //http://api.openweathermap.org/data/2.5/forecast/daily?zip=560040,india&mode=json&units=metric&cnt=7&appid=41a404f10522ec4c2eea0dbeb272836f
@@ -152,11 +177,13 @@ public class MainActivityFragment extends Fragment {
                     forecastJsonStr = null;
                 }
                 forecastJsonStr = buffer.toString();
-                Log.e("the reply", forecastJsonStr);
+                //Log.e("the reply", forecastJsonStr);
                 parseths(forecastJsonStr);
-                for(String si : str){
+                /*for(String si : str){
                     Log.e("the day  ",si);
-                }
+                }*/
+
+                return str;
 
             }
 
