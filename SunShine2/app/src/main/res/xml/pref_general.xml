@@ -9,4 +9,10 @@
         android:defaultValue="@string/myblore"
         android:inputType="text"
         android:singleLine="true"/>
+    <ListPreference
+        android:key="@string/tempkey"
+        android:title="@string/temptitle"
+        android:defaultValue="@string/metric"
+        android:entries="@array/mytemps"
+        android:entryValues="@array/mytvals"/>
 </PreferenceScreen>

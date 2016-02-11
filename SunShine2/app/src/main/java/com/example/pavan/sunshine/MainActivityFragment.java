@@ -37,6 +37,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.logging.Logger;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -44,6 +45,7 @@ import java.util.TimeZone;
 public class MainActivityFragment extends Fragment {
 
     ArrayAdapter<String> myadpt;
+    String tempunis;
 
 
 
@@ -65,25 +67,52 @@ public class MainActivityFragment extends Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
-            FetchTask exec = new FetchTask();
-            /*
-            SharedPreferences prefs = getActivity().getSharedPreferences(
-                    "pref_general.xml", Context.MODE_PRIVATE);*/
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            String picode="";
-            picode = prefs.getString(getString(R.string.pref_location_key),getString(R.string.myblore));
-            Log.e("pincode",picode);
-            exec.execute(picode);
+            myupdate();
 
             return true;
         }
         if(id == R.id.action_settings){
             Intent iu = new Intent(this.getContext(),SettingsActivity.class);
             startActivity(iu);
+        }
+        if(id == R.id.viewloc){
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String picode="";
+            picode = prefs.getString(getString(R.string.pref_location_key),getString(R.string.myblore));
+
+            Uri geolocation = Uri.parse("geo:0,0?").buildUpon().appendQueryParameter("q",picode).build();
+
+            Intent iu = new Intent(Intent.ACTION_VIEW);
+            iu.setData(geolocation);
+            if(iu.resolveActivity(getActivity().getPackageManager())!=null){
+                startActivity(iu);
+            }
+
 
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void myupdate(){
+        FetchTask exec = new FetchTask();
+            /*
+            SharedPreferences prefs = getActivity().getSharedPreferences(
+                    "pref_general.xml", Context.MODE_PRIVATE);*/
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String picode="";
+        picode = prefs.getString(getString(R.string.pref_location_key),getString(R.string.myblore));
+        tempunis = prefs.getString(getString(R.string.tempkey),"-1");
+        Log.e("temp scale",tempunis);
+        Log.e("pincode",picode);
+        exec.execute(picode);
+
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        myupdate();
     }
 
 
@@ -101,13 +130,6 @@ public class MainActivityFragment extends Fragment {
         container = (ViewGroup) inflater.inflate(R.layout.fragment_main, container, false);
 
         ArrayList<String> myarray = new ArrayList<>();
-        myarray.add("Today-Sunny-88/63");
-        myarray.add("Mon-Sunny-88/63");
-        myarray.add("Tue-Sunny-88/63");
-        myarray.add("wed-Sunny-88/63");
-        myarray.add("Thurs-Sunny-88/63");
-        myarray.add("fri-Sunny-88/63");
-        myarray.add("sat-Sunny-88/63");
 
         myadpt = new ArrayAdapter<>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview, myarray);
         ListView lv = (ListView) container.findViewById(R.id.listview_forcast);
@@ -263,9 +285,13 @@ public class MainActivityFragment extends Fragment {
             JSONArray s = arr.getJSONObject(dayIndex).getJSONArray("weather");
 
             String post_id = " - " +s.getJSONObject(0).getString("main");
-            int min =(int) arr.getJSONObject(dayIndex).getJSONObject("temp").getDouble("min");
-
-            post_id = post_id +" - "+ (int)arr.getJSONObject(dayIndex).getJSONObject("temp").getDouble("max")+'/' +min;
+            double min = arr.getJSONObject(dayIndex).getJSONObject("temp").getDouble("min");
+            double max = arr.getJSONObject(dayIndex).getJSONObject("temp").getDouble("max");
+            if(tempunis.equals("fahrenheit")){
+                min = (min * 1.8) + 32;
+                max = (max * 1.8) + 32;
+            }
+            post_id = post_id +" - "+ Math.round(max) +'/' + Math.round(min);
 
             return post_id;
         }

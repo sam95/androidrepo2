@@ -8,4 +8,16 @@
     <string name="loc_pref">Location</string>
     <string name="myblore">560040</string>
     <string name="pref_location_key">location</string>
+    <string name="metric">metric</string>
+    <string name="temptitle">temperature</string>
+    <string name="tempkey">temperature</string>
+    <string name="viewloc">View location</string>
+    <string-array name="mytemps">
+        <item>celsius</item>
+        <item>fahrenheit</item>
+    </string-array>
+    <string-array name="mytvals">
+        <item>celsius</item>
+        <item>fahrenheit</item>
+    </string-array>
 </resources>
