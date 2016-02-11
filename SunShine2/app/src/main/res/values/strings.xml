@@ -4,4 +4,8 @@
     <string name="refresh">refresh</string>
     <string name="sampleformat">Today - Sunny - 88/63</string>
     <string name="title_activity_detail">DetailActivity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="loc_pref">Location</string>
+    <string name="myblore">560040</string>
+    <string name="pref_location_key">location</string>
 </resources>

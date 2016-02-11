@@ -1,10 +1,13 @@
 package com.example.pavan.sunshine;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -63,9 +66,21 @@ public class MainActivityFragment extends Fragment {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
             FetchTask exec = new FetchTask();
-            exec.execute("560040");
+            /*
+            SharedPreferences prefs = getActivity().getSharedPreferences(
+                    "pref_general.xml", Context.MODE_PRIVATE);*/
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String picode="";
+            picode = prefs.getString(getString(R.string.pref_location_key),getString(R.string.myblore));
+            Log.e("pincode",picode);
+            exec.execute(picode);
 
             return true;
+        }
+        if(id == R.id.action_settings){
+            Intent iu = new Intent(this.getContext(),SettingsActivity.class);
+            startActivity(iu);
+
         }
 
         return super.onOptionsItemSelected(item);
