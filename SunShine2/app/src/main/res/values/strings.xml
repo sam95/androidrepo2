@@ -12,6 +12,7 @@
     <string name="temptitle">temperature</string>
     <string name="tempkey">temperature</string>
     <string name="viewloc">View location</string>
+    <string name="share">share</string>
     <string-array name="mytemps">
         <item>celsius</item>
         <item>fahrenheit</item>
