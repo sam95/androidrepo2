@@ -172,7 +172,7 @@ public class MainActivityFragment extends Fragment {
             //http://api.openweathermap.org/data/2.5/forecast/daily?zip=560040,india&mode=json&units=metric&cnt=7&appid=41a404f10522ec4c2eea0dbeb272836f
             builder.scheme("http").authority("api.openweathermap.org").appendPath("data").appendPath("2.5").appendPath("forecast").appendPath("daily").appendQueryParameter("zip", postcode)
                     .appendQueryParameter("type", "like").appendQueryParameter("mode", "json").appendQueryParameter("units", "metric")
-                    .appendQueryParameter("cnt", "7").appendQueryParameter("appid","key");
+                    .appendQueryParameter("cnt", "7").appendQueryParameter("appid",key);
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
