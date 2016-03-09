@@ -103,8 +103,8 @@ public class MainActivityFragment extends Fragment {
         String picode="";
         picode = prefs.getString(getString(R.string.pref_location_key),getString(R.string.myblore));
         tempunis = prefs.getString(getString(R.string.tempkey),"-1");
-        Log.e("temp scale",tempunis);
-        Log.e("pincode",picode);
+        //Log.e("temp scale",tempunis);
+        //Log.e("pincode",picode);
         exec.execute(picode);
 
     }
@@ -168,7 +168,7 @@ public class MainActivityFragment extends Fragment {
         protected String[] doInBackground(String... params) {
             Uri.Builder builder = new Uri.Builder();
             String postcode = params[0]+ ",india";
-            String key="secret api key";
+            String key="41a404f10522ec4c2eea0dbeb272836f";
             //http://api.openweathermap.org/data/2.5/forecast/daily?zip=560040,india&mode=json&units=metric&cnt=7&appid=41a404f10522ec4c2eea0dbeb272836f
             builder.scheme("http").authority("api.openweathermap.org").appendPath("data").appendPath("2.5").appendPath("forecast").appendPath("daily").appendQueryParameter("zip", postcode)
                     .appendQueryParameter("type", "like").appendQueryParameter("mode", "json").appendQueryParameter("units", "metric")
