@@ -38,6 +38,10 @@
             android:name="android.support.PARENT_ACTIVITY"
             android:value="com.example.pavan.sunshine.MainActivity" />
         </activity>
+                <provider
+                    android:authorities="com.example.pavan.sunshine"
+                    android:name=".WeatherProvider" />
+
     </application>
 
 </manifest>
